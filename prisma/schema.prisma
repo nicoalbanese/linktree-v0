@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("NEXT_DATABASE_URL")
+// }
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id       String  @id @default(cuid())
+  email    String  @unique
+  password String
+  name     String?
+  pages Page[]
+}
+
+model Page {
+  id        String      @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  // props here
+  title String
+  description String?
+  user User @relation(fields: [userId], references: [id])
+  userId String
+  links Link[]
+}
+
+model Link {
+  id        String      @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  // props here
+  title String
+  url String
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade )
+  pageId String
+}
+

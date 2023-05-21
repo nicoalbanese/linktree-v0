@@ -1,3 +1,4 @@
+
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -9,11 +10,16 @@ generator client {
 //   provider = "postgresql"
 //   url      = env("NEXT_DATABASE_URL")
 // }
-
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
 }
+// datasource db {
+//   provider = "sqlite"
+//   url      = "file:./dev.db"
+// }
 
 model User {
   id       String  @id @default(cuid())
@@ -45,4 +51,3 @@ model Link {
   page Page @relation(fields: [pageId], references: [id], onDelete: Cascade )
   pageId String
 }
-
